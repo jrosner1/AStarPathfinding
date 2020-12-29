@@ -1,15 +1,13 @@
 package PathFinding;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 
@@ -125,6 +123,16 @@ public class Main extends Application {
         return button;
     }
 
+    private void reset(){
+        for(int i = 0; i < aField.getNumColumns(); i++){
+            for(int j = 0; j < aField.getNumRows(); j++){
+                Square.getSquare(i, j).resetSquare();
+            }
+        }
+        aField.fieldReset();
+        render();
+    }
+
     private Button createAccessibleButton(int pRow, int pColumn){
         Button button = new Button();
         button.setMinHeight(0);
@@ -153,7 +161,18 @@ public class Main extends Application {
         topButton.setOnMouseClicked(e -> createPath());
         topButton.setStyle(TOP_BUTTON_STYLE);
         topButton.setText("Find Path");
-        root.setTop(topButton);
+        Button resetButton = new Button();
+        resetButton.setOnMouseClicked(e -> reset());
+        resetButton.setStyle(TOP_BUTTON_STYLE);
+        resetButton.setText("Reset Grid");
+
+        HBox topButtons = new HBox();
+        topButtons.setPadding(new Insets(12, 12, 12, 12));
+        topButtons.setSpacing(10);
+        topButtons.setStyle("-fx-background-color: #63B0EF");
+        topButtons.getChildren().addAll(topButton, resetButton);
+        root.setTop(topButtons);
+
         aGrid = new GridPane();
         root.setCenter(aGrid);
         aGrid.setHgap(1.5);

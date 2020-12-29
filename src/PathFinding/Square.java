@@ -39,6 +39,12 @@ public class Square {
         movesFromStart = Optional.of(pMoves);
     }
 
+    public void resetSquare(){
+        makeAccessible();
+        movesFromStart = Optional.empty();
+        estimatedCostToFinish = Optional.empty();
+    }
+
     public void setEstimatedCostToFinish(int pCost){
         estimatedCostToFinish = Optional.of(pCost);
     }
@@ -50,6 +56,8 @@ public class Square {
     public void makeSource(){
         this.aStatus = Status.SOURCE;
     }
+
+    public void makeAccessible(){this.aStatus = Status.ACCESSIBLE;}
 
     public void considerSquare(){
         this.aStatus = Status.CONSIDERING;

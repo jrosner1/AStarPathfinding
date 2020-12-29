@@ -7,7 +7,6 @@ public class Field {
     private boolean aHasDestination;
     private Square aSource;
     private Square aDestination;
-    private Field aField;
 
     public Field(int pNumRows, int pNumColumns){
         assert pNumRows > 0 && pNumColumns > 0;
@@ -56,6 +55,11 @@ public class Field {
         Square.getSquare(pRow, pColumn).makeDestination();
         aDestination = Square.getSquare(pRow, pColumn);
         aHasDestination = true;
+    }
+
+    public void fieldReset(){
+        aHasDestination = false;
+        aHasSource = false;
     }
 
     public void makeInaccessible(int pRow, int pColumn){

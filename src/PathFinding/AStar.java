@@ -54,14 +54,27 @@ public class AStar {
     }
 
     public ArrayList<Square> traceBackSolution(){
+        /**
+        for(int i =0; i < aParents.length; i++){
+            for(int j = 0; j < aParents[0].length; j++){
+                System.out.println(aParents[i][j]);
+            }
+        }
+         **/
         ArrayList<Square> shortestPath = new ArrayList<>();
-        Square current = aParents[aDestination.getColumn()][aDestination.getRow()];
+        //System.out.println(aDestination.getColumn() + " " + aDestination.getRow());
+        Square current = aParents[aDestination.getColumn()][aDestination.getRow()];;
+        //System.out.println(current);
         while(current != aSource){
             shortestPath.add(current);
+            //System.out.println("Column: "+current.getColumn());
+            //System.out.println("Row: " +current.getRow());
             current = aParents[current.getColumn()][current.getRow()];
         }
+        System.out.println("               ");
         return shortestPath;
     }
+
 
     private ArrayList<Square> getAdjacentSquares(Square pSquare){
         int row = pSquare.getRow();
@@ -107,6 +120,7 @@ public class AStar {
         int verticalDistance = Math.abs(aDestination.getRow() - pSquare.getRow());
         return horizontalDistance + verticalDistance;
     }
+
 
 
     private boolean squareNotInList(Square pSquare){
