@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 
 public class Main extends Application {
     int PADDING = 2;
-
     int NUM_ROWS = 25;
     int NUM_COLUMNS = 25;
 
@@ -28,10 +27,6 @@ public class Main extends Application {
     String PATH_BUTTON_STYLE = "-fx-background-radius: 0; -fx-pref-width: 30px; -fx-pref-height: 30px;" +
             "-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 12; " +
             "-fx-font-weight: bold; -fx-background-color: black";
-
-    String CONSIDERING_BUTTON_STYLE = "-fx-background-radius: 0; -fx-pref-width: 30px; -fx-pref-height: 30px;" +
-            "-fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 12; " +
-            "-fx-font-weight: bold; -fx-background-color: green";
 
     String TOP_BUTTON_STYLE = "-fx-pref-width: 100px; -fx-pref-height: 30px; -fx-focus-color: transparent;" +
             "-fx-faint-focus-color: transparent; -fx-font-size: 12; -fx-background-radius: 0; -fx-font-weight: bold;"+
@@ -54,6 +49,9 @@ public class Main extends Application {
         aGrid.requestFocus();
     }
 
+    /**
+     * Method to update the buttons in the grid based on their current statuses
+     */
     private void render(){
         aGrid.getChildren().clear();
         aGrid.requestFocus();
@@ -64,6 +62,12 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * A method to determine the status of a square and delegate its creation to the appropriate method.
+     * @param pRow The row of the square to be created.
+     * @param pColumn The column of the square to be created
+     * @return The button that will be added to the GridPane
+     */
     private Node createNode(int pRow, int pColumn){
         if(aField.isAccessible(pRow, pColumn)){
             return createAccessibleButton(pRow, pColumn);
@@ -73,14 +77,15 @@ public class Main extends Application {
             return createDestinationButton();
         }else if(aField.isPath(pRow, pColumn)){
             return createPathButton();
-        }else if(aField.isConsidered(pRow, pColumn)){
-            return consideringButton();
-        }
-        else{
+        }else{
             return createInaccessibleButton();
         }
     }
 
+    /**
+     * A method to create a button representing the source of the path to be created.
+     * @return The source button that has been created for this square position.
+     */
     private Button createSourceButton(){
         Button button = new Button();
         button.setText("S");
@@ -90,6 +95,10 @@ public class Main extends Application {
         return button;
     }
 
+    /**
+     * A method to create a button representing a square that is in the solution path.
+     * @return The button representing part of the path.
+     */
     private Button createPathButton(){
         Button button = new Button();
         button.setMinHeight(0);
@@ -98,14 +107,10 @@ public class Main extends Application {
         return button;
     }
 
-    private Button consideringButton(){
-        Button button = new Button();
-        button.setMinHeight(0);
-        button.setMinWidth(0);
-        button.setStyle(CONSIDERING_BUTTON_STYLE);
-        return button;
-    }
-
+    /**
+     * A method to create a button representing the destination of the path to be created.
+     * @return The button representing the destination of the path.
+     */
     private Button createDestinationButton(){
         Button button = new Button();
         button.setText("D");
@@ -115,6 +120,10 @@ public class Main extends Application {
         return button;
     }
 
+    /**
+     * A method to create a button representing a square that may not be part of the final path.
+     * @return The button representing a square that may not be part of the final path.
+     */
     private Button createInaccessibleButton(){
         Button button = new Button();
         button.setMinHeight(0);
@@ -123,6 +132,9 @@ public class Main extends Application {
         return button;
     }
 
+    /**
+     * A method to reset the squares so that a new path may be generated.
+     */
     private void reset(){
         for(int i = 0; i < aField.getNumColumns(); i++){
             for(int j = 0; j < aField.getNumRows(); j++){
@@ -133,15 +145,22 @@ public class Main extends Application {
         render();
     }
 
+    /**
+     * A method to create an accessible button that may be changed into a source, destination, or inaccessible later on.
+     * @param pRow The row of the button to be created.
+     * @param pColumn The column of the button to be created.
+     * @return
+     */
     private Button createAccessibleButton(int pRow, int pColumn){
         Button button = new Button();
         button.setMinHeight(0);
         button.setMinWidth(0);
         button.setStyle(ACCESSIBLE_BUTTON_STYLE);
+        //The first accessible button pressed will become the source, the second will be the destination, and all subsequent will be inaccessible.
         button.setOnMouseClicked( e ->{
-            if(!aField.hasSource()){
+            if(aField.getSource().isEmpty()){
                 aField.setSource(pRow, pColumn);
-            }else if(!aField.hasDestination()){
+            }else if(aField.getDestination().isEmpty()){
                 aField.setDestination(pRow, pColumn);
             }else {
                 aField.makeInaccessible(pRow, pColumn);
@@ -151,16 +170,23 @@ public class Main extends Application {
         return button;
     }
 
+    /**
+     * A method to initialize the field instance that this program will model.
+     */
     private void initializeField(){
         aField = new Field(NUM_ROWS, NUM_COLUMNS);
     }
 
+    /**
+     * A method to create a scene with find path and reset buttons on the top.
+     * @return The scene that has been created
+     */
     private Scene CreateScene(){
         final BorderPane root = new BorderPane();
-        Button topButton = new Button();
-        topButton.setOnMouseClicked(e -> createPath());
-        topButton.setStyle(TOP_BUTTON_STYLE);
-        topButton.setText("Find Path");
+        Button findPathButton = new Button();
+        findPathButton.setOnMouseClicked(e -> createPath());
+        findPathButton.setStyle(TOP_BUTTON_STYLE);
+        findPathButton.setText("Find Path");
         Button resetButton = new Button();
         resetButton.setOnMouseClicked(e -> reset());
         resetButton.setStyle(TOP_BUTTON_STYLE);
@@ -170,7 +196,7 @@ public class Main extends Application {
         topButtons.setPadding(new Insets(12, 12, 12, 12));
         topButtons.setSpacing(10);
         topButtons.setStyle("-fx-background-color: #63B0EF");
-        topButtons.getChildren().addAll(topButton, resetButton);
+        topButtons.getChildren().addAll(findPathButton, resetButton);
         root.setTop(topButtons);
 
         aGrid = new GridPane();
@@ -182,11 +208,15 @@ public class Main extends Application {
         return new Scene(root);
     }
 
+    /**
+     * A method that will generate the shortest path as calculated by the AStar algorithm
+     */
     private void createPath(){
-        AStar fieldAStar = new AStar(aField.getSource(), aField.getDestination(), aField.getNumColumns(), aField.getNumRows());
+        assert aField.getSource().isPresent() && aField.getDestination().isPresent();
+        AStar fieldAStar = new AStar(aField.getSource().get(), aField.getDestination().get(), aField.getNumColumns(), aField.getNumRows());
         fieldAStar.solve();
         for(Square square : fieldAStar.traceBackSolution()){
-            square.makePath();
+            square.setStatus(Status.PATH);
         }
         render();
     }

@@ -6,5 +6,4 @@ public enum Status {
     SOURCE,
     DESTINATION,
     PATH,
-    CONSIDERING
 }
