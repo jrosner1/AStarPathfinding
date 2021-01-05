@@ -100,6 +100,15 @@ public class Field {
     }
 
     /**
+     * A method to mark a square in the field as accessible.
+     * @param pRow The row of the accessible square.
+     * @param pColumn The column of the accessible square.
+     */
+    public void makeAccessible(int pRow, int pColumn){
+        Square.getSquare(pRow, pColumn).setStatus(Status.ACCESSIBLE);
+    }
+
+    /**
      * A method to test if a square in the field is accessible
      * @param pRow The row of the square to test.
      * @param pColumn The column of the squar eot test.

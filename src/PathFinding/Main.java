@@ -78,7 +78,7 @@ public class Main extends Application {
         }else if(aField.isPath(pRow, pColumn)){
             return createPathButton();
         }else{
-            return createInaccessibleButton();
+            return createInaccessibleButton(pRow, pColumn);
         }
     }
 
@@ -124,11 +124,15 @@ public class Main extends Application {
      * A method to create a button representing a square that may not be part of the final path.
      * @return The button representing a square that may not be part of the final path.
      */
-    private Button createInaccessibleButton(){
+    private Button createInaccessibleButton(int pRow, int pColumn){
         Button button = new Button();
         button.setMinHeight(0);
         button.setMinWidth(0);
         button.setStyle(INACCESSIBLE_BUTTON_STYLE);
+        button.setOnMouseClicked(e ->{
+            aField.makeAccessible(pRow, pColumn);
+            render();
+        });
         return button;
     }
 
@@ -149,7 +153,7 @@ public class Main extends Application {
      * A method to create an accessible button that may be changed into a source, destination, or inaccessible later on.
      * @param pRow The row of the button to be created.
      * @param pColumn The column of the button to be created.
-     * @return
+     * @return The Accessible button created.
      */
     private Button createAccessibleButton(int pRow, int pColumn){
         Button button = new Button();
@@ -162,7 +166,7 @@ public class Main extends Application {
                 aField.setSource(pRow, pColumn);
             }else if(aField.getDestination().isEmpty()){
                 aField.setDestination(pRow, pColumn);
-            }else {
+            }else{
                 aField.makeInaccessible(pRow, pColumn);
             }
             render();
